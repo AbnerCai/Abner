@@ -7,10 +7,20 @@
         android:layout_height="match_parent"
         tools:context=".WebViewActivity">
 
-    <com.tencent.smtt.sdk.WebView
-        android:id="@+id/webview"
+    <lib.homhomlib.design.SlidingLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.tencent.smtt.sdk.WebView>
+        android:layout_height="match_parent"
+        app:sliding_mode="top"
+        app:background_view="@layout/view_bg">
+
+        <com.tencent.smtt.sdk.WebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+        </com.tencent.smtt.sdk.WebView>
+
+    </lib.homhomlib.design.SlidingLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

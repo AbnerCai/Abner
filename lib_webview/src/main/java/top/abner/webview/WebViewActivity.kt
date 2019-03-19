@@ -1,12 +1,18 @@
 package top.abner.webview
 
+import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_webview.*
 import android.content.Intent
+import android.net.Uri
 import android.view.ViewGroup
-import android.webkit.*
+import com.tencent.smtt.sdk.WebChromeClient
+import com.tencent.smtt.sdk.WebSettings
+import com.tencent.smtt.sdk.WebView
+import com.tencent.smtt.sdk.WebViewClient
+import kotlinx.android.synthetic.main.view_bg.*
 
 
 /**
@@ -63,6 +69,37 @@ class WebViewActivity : AppCompatActivity() {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true) //支持通过JS打开新窗口
         webSettings.setLoadsImagesAutomatically(true) //支持自动加载图片
         webSettings.setDefaultTextEncodingName("utf-8")//设置编码格式
+
+        webview.webChromeClient = object : WebChromeClient() {
+
+        }
+
+        webview.webViewClient = object: WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                try {
+                    if (url!!.startsWith("http://")
+                        || url!!.startsWith("https://")) {
+                        webview.loadUrl(url)
+                        return true
+                    }
+                } catch (e: Exception) {
+                    return false
+                }
+
+                try {
+                    if (url!!.startsWith("baiduboxapp://")
+                        || url!!.startsWith("baiduboxlite://")) {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        startActivity(intent)
+                        return true
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    return true
+                }
+                return super.shouldOverrideUrlLoading(view, url)
+            }
+        }
 
 
     }
