@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_webview.*
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.view.ViewGroup
 import android.webkit.*
 
@@ -66,50 +64,6 @@ class WebViewActivity : AppCompatActivity() {
         webSettings.setLoadsImagesAutomatically(true) //支持自动加载图片
         webSettings.setDefaultTextEncodingName("utf-8")//设置编码格式
 
-
-        webview.setWebChromeClient(object : WebChromeClient() {
-
-            override fun onReceivedTitle(view: WebView, title: String) {
-                super.onReceivedTitle(view, title)
-            }
-
-            override fun onReceivedIcon(view: WebView, icon: Bitmap) {
-                super.onReceivedIcon(view, icon)
-            }
-
-        })
-
-        webview.setWebViewClient(object: WebViewClient(){
-
-            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                try {
-                    if (url!!.startsWith("http:") || url!!.startsWith("https:")) {
-                        webview.loadUrl(url)
-                        return true;
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-                try {
-                    if (url!!.startsWith("baiduboxapp://")
-                        || url!!.startsWith("baiduboxlite://")) {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                        startActivity(intent)
-                        return true
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    return true
-                }
-                return super.shouldOverrideUrlLoading(view, url)
-            }
-
-            override fun onPageFinished(view: WebView, url: String) {
-                super.onPageFinished(view, url)
-                title = view.title.toString()
-            }
-        })
 
     }
 
