@@ -27,7 +27,6 @@ class MainActivity : BaseAbstractActivity(), NavigationView.OnNavigationItemSele
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
         initView()
         initData()
     }
