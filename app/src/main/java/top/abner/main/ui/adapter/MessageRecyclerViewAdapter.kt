@@ -6,7 +6,12 @@ import android.view.View
 import android.widget.TextView
 import top.abner.main.data.entity.Message
 import android.view.LayoutInflater
+import androidx.paging.PagedListAdapter
 import top.abner.main.R
+import androidx.recyclerview.widget.DiffUtil
+
+
+
 
 /**
  * 
@@ -14,9 +19,8 @@ import top.abner.main.R
  * @version 1.0.0
  * @date 2019/3/6 11:30
  */
-class MessageRecyclerViewAdapter(list: List<Message>?) : RecyclerView.Adapter<MessageRecyclerViewAdapter.ViewHolder>() {
-
-    private var list: List<Message>? = list
+class MessageRecyclerViewAdapter(list: List<Message>?)
+        : PagedListAdapter<Message, MessageRecyclerViewAdapter.ViewHolder>(diffCallback) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageRecyclerViewAdapter.ViewHolder {
@@ -24,12 +28,9 @@ class MessageRecyclerViewAdapter(list: List<Message>?) : RecyclerView.Adapter<Me
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return list?.size ?: 0
-    }
-
     override fun onBindViewHolder(holder: MessageRecyclerViewAdapter.ViewHolder, position: Int) {
-        holder.mContentTv.setText(list?.get(position)?.content);
+        val data = getItem(position)
+        holder.mContentTv.setText(data?.content);
     }
 
 
@@ -37,6 +38,30 @@ class MessageRecyclerViewAdapter(list: List<Message>?) : RecyclerView.Adapter<Me
         var mContentTv: TextView
         init {
             mContentTv = itemView.findViewById(R.id.content)
+        }
+    }
+
+    companion object {
+        /**
+         * This diff callback informs the PagedListAdapter how to compute list differences when new
+         * PagedLists arrive.
+         * <p>
+         * When you add a Cheese with the 'Add' button, the PagedListAdapter uses diffCallback to
+         * detect there's only a single item difference from before, so it only needs to animate and
+         * rebind a single view.
+         *
+         * @see android.support.v7.util.DiffUtil
+         */
+        private val diffCallback = object : DiffUtil.ItemCallback<Message>() {
+            override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean =
+                    oldItem.id == newItem.id
+
+            /**
+             * Note that in kotlin, == checking on data classes compares all contents, but in Java,
+             * typically you'll implement Object#equals, and use it to compare object contents.
+             */
+            override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean =
+                    oldItem == newItem
         }
     }
 }

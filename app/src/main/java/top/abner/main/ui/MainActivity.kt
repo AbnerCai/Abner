@@ -54,10 +54,8 @@ class MainActivity : BaseAbstractActivity(), NavigationView.OnNavigationItemSele
         recyclerView.adapter = adapter
 
         val model = ViewModelProviders.of(this).get(MessageViewModel::class.java)
-        model.getMessages().observe(this, Observer {
-            data?.clear()
-            data?.addAll(it)
-            adapter?.notifyDataSetChanged()
+        model.messages.observe(this, Observer {
+            adapter?.submitList(it)
         })
     }
 

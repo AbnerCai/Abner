@@ -26,6 +26,13 @@ class HttpUtils {
             client.newCall(request).enqueue(callback)
         }
 
+        fun get(url: String): Response {
+            val request = Request.Builder()
+                    .url(url)
+                    .build()
+            return client.newCall(request).execute()
+        }
+
         private val JSON = MediaType.parse("application/json; charset=utf-8")
 
         fun post(url: String, json: String, callback: Callback) {

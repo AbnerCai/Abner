@@ -1,17 +1,11 @@
 package top.abner.main.data
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONObject
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import top.abner.main.data.entity.Message
-import top.abner.main.data.network.HttpUtils
-import java.io.IOException
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+
 
 /**
  * 
@@ -21,38 +15,54 @@ import java.io.IOException
  */
 class MessageViewModel : ViewModel() {
 
-    val TAG = "MessageViewModel"
+    companion object {
+        private val TAG = "MessageViewModel"
 
-    var messages: MutableLiveData<List<Message>>? = null
+        private const val PAGE_SIZE = 15
 
-    fun getMessages(): LiveData<List<Message>> {
-        if (messages == null) {
-            messages = MutableLiveData<List<Message>>()
-            loadMessages()
-        }
-        return messages as MutableLiveData<List<Message>>
+        private const val ENABLE_PLACEHOLDERS = false
     }
 
-    private fun loadMessages() {
-        HttpUtils.get("http://api.nebulous.cn/v1/digest", object: Callback{
-            override fun onResponse(call: Call, response: Response) {
-                val result = response.body()?.string().toString()
-                Log.i(TAG, result)
-                val body = JSON.parseObject(result)
-                val code = body.getIntValue("code")
-                if (code == 200) {
-                    val data = body.getJSONArray("data")
+    var config: PagedList.Config = PagedList.Config.Builder()
+            .setPageSize(10)                         //配置分页加载的数量
+            .setEnablePlaceholders(false)     //配置是否启动PlaceHolders
+            .setInitialLoadSizeHint(10)              //初始化加载的数量
+            .build()
 
-                    messages?.postValue(JSONObject.parseArray(JSON.toJSONString(data), Message::class.java))
-                } else {
+    var messages: LiveData<PagedList<Message>> = LivePagedListBuilder(MessageDataSourceFactory(), config)
+            .build()
 
-                }
-            }
 
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
-        })
-    }
+//    fun getMessages(): LiveData<List<Message>> {
+//        if (messages == null) {
+//            messages = MutableLiveData<List<Message>>()
+//            loadMessages()
+//        }
+//        return messages as MutableLiveData<List<Message>>
+//    }
+
+//    private fun loadMessages() {
+//        HttpUtils.get("http://api.nebulous.cn/v1/digest", object: Callback{
+//            override fun onResponse(call: Call, response: Response) {
+//                val result = response.body()?.string().toString()
+//
+//                Log.i(TAG, result)
+//                val body = JSON.parseObject(result)
+//
+//                val code = body.getIntValue("code")
+//                if (code == 200) {
+//                    val data = body.getJSONArray("data")
+//
+//                    messages?.postValue(JSONObject.parseArray(JSON.toJSONString(data), Message::class.java))
+//                } else {
+//
+//                }
+//            }
+//
+//            override fun onFailure(call: Call, e: IOException) {
+//                e.printStackTrace()
+//            }
+//        })
+//    }
 
 }
