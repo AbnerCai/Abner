@@ -2,8 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
+apply plugin: 'com.novoda.bintray-release'
+
 android {
     compileSdkVersion 28
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
         minSdkVersion 19
@@ -27,4 +32,13 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+publish {
+    userOrg = 'nebulas'
+    groupId = 'top.abner'
+    artifactId = 'Abner'
+    publishVersion = '0.0.2'
+    desc = 'Abner Base'
+    website = 'https://github.com/AbnerCai/Abner'
 }
