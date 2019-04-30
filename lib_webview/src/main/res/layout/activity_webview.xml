@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".WebViewActivity">
+        tools:context=".X5WebViewActivity">
 
     <lib.homhomlib.design.SlidingLayout
         android:layout_width="match_parent"
@@ -13,11 +13,11 @@
         app:sliding_mode="top"
         app:background_view="@layout/view_bg">
 
-        <com.tencent.smtt.sdk.WebView
+        <WebView
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-        </com.tencent.smtt.sdk.WebView>
+        </WebView>
 
     </lib.homhomlib.design.SlidingLayout>
 

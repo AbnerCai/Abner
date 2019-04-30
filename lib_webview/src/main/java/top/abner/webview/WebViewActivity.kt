@@ -1,22 +1,22 @@
 package top.abner.webview
 
-import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_webview.*
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.ViewGroup
-import com.tencent.smtt.sdk.WebChromeClient
-import com.tencent.smtt.sdk.WebSettings
-import com.tencent.smtt.sdk.WebView
-import com.tencent.smtt.sdk.WebViewClient
-import kotlinx.android.synthetic.main.view_bg.*
-
+import android.webkit.*
+import kotlinx.android.synthetic.main.activity_webview.*
+import top.abner.webview.cache.CacheHelper
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.InputStream
 
 /**
- * 
+ * WevView
  * @author Nebula
  * @version 1.0.0
  * @date 2019/3/19 10:08
@@ -30,11 +30,14 @@ class WebViewActivity : AppCompatActivity() {
             intent.putExtra("url", url)
             context.startActivity(intent)
         }
+
+        private var TAG: String = WebViewActivity::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_webview)
+        CacheHelper.getInstance().initDiskCache(this)
         initView()
 
         initData()
@@ -42,8 +45,11 @@ class WebViewActivity : AppCompatActivity() {
 
     private fun initData() {
         val url = intent.getStringExtra("url");
+        // TODO: 校验 url 规则
         if (url.isNotEmpty()) {
             webview.loadUrl(url);
+        } else {
+            // TODO: 加载本地错误页面
         }
     }
 
@@ -99,9 +105,38 @@ class WebViewActivity : AppCompatActivity() {
                 }
                 return super.shouldOverrideUrlLoading(view, url)
             }
+
+            override fun shouldInterceptRequest(view: WebView?, url: String?): WebResourceResponse? {
+                Log.i(TAG, "url: " + url);
+                var response: WebResourceResponse? = null
+                // TODO： 判断后缀
+                if (null == url || "".equals(url)) {
+                    return super.shouldInterceptRequest(view, url)
+                }
+                if (url.endsWith(".js")) {
+                    Log.i(TAG, "js: " + url);
+                    response = getWebResourceResponse(url,"text/javascript", "UTF-8");
+                    if (null == response) {
+                        Log.i(TAG, "下载缓存")
+                        CacheHelper.getInstance().setFileToDisk(url, object: CacheHelper.CacheCallback{
+                            override fun onFinish(fileUrl: String?) {
+                                Log.i(TAG, "fileUrl: " + fileUrl)
+                            }
+
+                            override fun onError(e: Exception?) {
+                                e?.printStackTrace()
+                            }
+                        })
+                    } else {
+                        Log.i(TAG, "使用缓存")
+                    }
+                }
+                return response
+
+//                return super.shouldInterceptRequest(view, url)
+            }
+
         }
-
-
     }
 
     override fun onBackPressed() {
@@ -111,7 +146,6 @@ class WebViewActivity : AppCompatActivity() {
             super.onBackPressed()
     }
 
-
     override fun onDestroy() {
         if (webview != null) {
             webview.loadDataWithBaseURL(null, "", "text/html", "utf-8", null)
@@ -120,5 +154,33 @@ class WebViewActivity : AppCompatActivity() {
             webview.destroy()
         }
         super.onDestroy()
+    }
+
+    /**
+     * 获取资源文件
+     * */
+    private fun getWebResourceResponse(url: String, mime: String, style: String): WebResourceResponse? {
+        Log.i(TAG, "getWebResourceResponse: " + url);
+        var response: WebResourceResponse? = null
+        var input: InputStream? = CacheHelper.getInstance().getInputStreamFromDisk(url)
+        if (null == input) {
+            return null
+        }
+        try {
+            response = WebResourceResponse(mime, style, input)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+        return response
+    }
+
+    fun clearWebViewCache() {
+        // 清理Webview缓存数据库
+        try {
+            deleteDatabase("webview.db");
+            deleteDatabase("webviewCache.db");
+        } catch (e: Exception) {
+            e.printStackTrace();
+        }
     }
 }
