@@ -7,10 +7,14 @@ import kotlinx.android.synthetic.main.activity_x5webview.*
 import android.content.Intent
 import android.net.Uri
 import android.view.ViewGroup
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse
 import com.tencent.smtt.sdk.WebChromeClient
 import com.tencent.smtt.sdk.WebSettings
 import com.tencent.smtt.sdk.WebView
 import com.tencent.smtt.sdk.WebViewClient
+import top.abner.webview.cache.WebResourceInterceptor
+import top.abner.webview.cache.X5WebResourceInterceptorAdapter
+import java.lang.NullPointerException
 
 
 /**
@@ -34,6 +38,8 @@ class X5WebViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_x5webview)
         initView()
+
+        WebResourceInterceptor.instance.init(this)
 
         initData()
     }
@@ -97,9 +103,16 @@ class X5WebViewActivity : AppCompatActivity() {
                 }
                 return super.shouldOverrideUrlLoading(view, url)
             }
+
+            override fun shouldInterceptRequest(view: WebView, url: String): WebResourceResponse? {
+                var response: android.webkit.WebResourceResponse? =
+                    WebResourceInterceptor.instance.urlIntercept(url);
+                if (null != response) {
+                    return X5WebResourceInterceptorAdapter(response)
+                }
+                return super.shouldInterceptRequest(view, url)
+            }
         }
-
-
     }
 
     override fun onBackPressed() {

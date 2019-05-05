@@ -5,13 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.webkit.*
 import kotlinx.android.synthetic.main.activity_webview.*
 import top.abner.webview.cache.CacheHelper
-import java.io.File
-import java.io.FileInputStream
+import top.abner.webview.cache.WebResourceInterceptor
 import java.io.FileNotFoundException
 import java.io.InputStream
 
@@ -36,8 +38,12 @@ class WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_webview)
-        CacheHelper.getInstance().initDiskCache(this)
+
+        WebResourceInterceptor.instance.init(this)
+
         initView()
 
         initData()
@@ -107,33 +113,8 @@ class WebViewActivity : AppCompatActivity() {
             }
 
             override fun shouldInterceptRequest(view: WebView?, url: String?): WebResourceResponse? {
-                Log.i(TAG, "url: " + url);
-                var response: WebResourceResponse? = null
-                // TODO： 判断后缀
-                if (null == url || "".equals(url)) {
-                    return super.shouldInterceptRequest(view, url)
-                }
-                if (url.endsWith(".js")) {
-                    Log.i(TAG, "js: " + url);
-                    response = getWebResourceResponse(url,"text/javascript", "UTF-8");
-                    if (null == response) {
-                        Log.i(TAG, "下载缓存")
-                        CacheHelper.getInstance().setFileToDisk(url, object: CacheHelper.CacheCallback{
-                            override fun onFinish(fileUrl: String?) {
-                                Log.i(TAG, "fileUrl: " + fileUrl)
-                            }
-
-                            override fun onError(e: Exception?) {
-                                e?.printStackTrace()
-                            }
-                        })
-                    } else {
-                        Log.i(TAG, "使用缓存")
-                    }
-                }
-                return response
-
-//                return super.shouldInterceptRequest(view, url)
+                var response: WebResourceResponse? = WebResourceInterceptor.instance.urlIntercept(url);
+                return response ?: super.shouldInterceptRequest(view, url)
             }
 
         }
@@ -156,23 +137,7 @@ class WebViewActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    /**
-     * 获取资源文件
-     * */
-    private fun getWebResourceResponse(url: String, mime: String, style: String): WebResourceResponse? {
-        Log.i(TAG, "getWebResourceResponse: " + url);
-        var response: WebResourceResponse? = null
-        var input: InputStream? = CacheHelper.getInstance().getInputStreamFromDisk(url)
-        if (null == input) {
-            return null
-        }
-        try {
-            response = WebResourceResponse(mime, style, input)
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        }
-        return response
-    }
+
 
     fun clearWebViewCache() {
         // 清理Webview缓存数据库
