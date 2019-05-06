@@ -7,6 +7,7 @@ import kotlinx.android.synthetic.main.activity_x5webview.*
 import android.content.Intent
 import android.net.Uri
 import android.view.ViewGroup
+import android.view.Window
 import com.tencent.smtt.export.external.interfaces.WebResourceResponse
 import com.tencent.smtt.sdk.WebChromeClient
 import com.tencent.smtt.sdk.WebSettings
@@ -36,6 +37,7 @@ class X5WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_x5webview)
         initView()
 
