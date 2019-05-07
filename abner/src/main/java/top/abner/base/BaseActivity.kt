@@ -14,4 +14,24 @@ abstract class BaseActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
+    /**
+     * 加载中
+     * */
+    abstract fun showLoading();
+
+    /**
+     *
+     * */
+    abstract fun showLoadSuccess();
+
+    /**
+     *
+     * */
+    abstract fun showLoadFailed();
+
+    /**
+     *
+     * */
+    abstract fun showEmpty();
 }

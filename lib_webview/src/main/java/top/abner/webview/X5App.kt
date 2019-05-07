@@ -5,7 +5,7 @@ import android.util.Log
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.QbSdk.PreInitCallback
 
-class X5App : Application() {
+open class X5App : Application() {
 
     val TAG = "X5APP"
 
