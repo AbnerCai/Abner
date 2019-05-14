@@ -6,7 +6,7 @@ package top.abner.base.mvp
  * @version 1.0.0
  * @date 2019/3/18 11:52
  */
-interface BaseView {
+interface IBaseView {
     
     open fun showLoading()
 

@@ -9,7 +9,7 @@ import top.abner.base.BaseActivity
  * @version 1.0.0
  * @date 2019/3/18 14:14
  */
-abstract class MvpActivity<P : BasePresenter<BaseView>> : BaseActivity() {
+abstract class MvpActivity<P : BasePresenter<IBaseView>> : BaseActivity() {
 
     protected var mvpPresenter: P? = null
 
