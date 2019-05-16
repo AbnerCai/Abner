@@ -2,6 +2,8 @@
 
 > 采用 MVVM 模式进行开发
 
+- kotlin only
+- AndroidX
 
 ## TODO
 - 组件化
