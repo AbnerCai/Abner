@@ -13,17 +13,17 @@ interface IBasePresenter<T : IBaseView>  {
      * 绑定view，一般在初始化中调用该方法
      * @param mView
      */
-    open fun attachView(mView: T)
+    fun attachView(mView: T)
 
     /**
      * 断开view，一般在onDestroy中调用
      */
-    open fun detachView()
+    fun detachView()
 
     /**
      * 是否与 View 建立连接
      * 每次调用业务请求的时候都要出先调用方法检查是否与 View 建立连接
      * @return
      */
-    open fun isViewAttached(): Boolean
+    fun isViewAttached(): Boolean
 }

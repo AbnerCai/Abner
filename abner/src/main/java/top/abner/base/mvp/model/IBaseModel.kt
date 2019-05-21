@@ -1,4 +1,4 @@
-package top.abner.base.mvp.model;
+package top.abner.base.mvp.model
 
 /**
  * M 层，负责数据相关
@@ -6,5 +6,5 @@ package top.abner.base.mvp.model;
  * @version 1.0.0
  * @date 2019/5/14 15:23
  */
-public interface IBaseModel {
+interface IBaseModel {
 }

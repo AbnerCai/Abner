@@ -11,22 +11,22 @@ interface IBaseView {
     /**
      * 显示加载中.
      */
-    open fun showLoading()
+    fun showLoading()
 
     /**
      * 隐藏加载中.
      */
-    open fun dismissLoading()
+    fun dismissLoading()
 
     /**
      * 显示 Toast
      * @param message 显示消息
      */
-    open fun showToast(message: String)
+    fun showToast(message: String)
 
     /**
      * 失败异常处理
      * @param e 异常信息
      */
-    open fun onError(e: Exception)
+    fun onError(e: Exception)
 }

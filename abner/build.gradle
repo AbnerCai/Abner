@@ -2,8 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
-apply plugin: 'com.novoda.bintray-release'
-
 android {
     compileSdkVersion 28
     lintOptions {
@@ -20,7 +18,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -29,18 +27,20 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation "com.google.guava:guava:27.1-android"
 }
 
+apply plugin: 'com.novoda.bintray-release'
+
 publish {
-    userOrg = 'nebulas'
+    userOrg = 'caihonghui94'
     groupId = 'top.abner'
-    artifactId = 'Abner'
-    publishVersion = '0.0.2'
+    artifactId = 'abner'
+    publishVersion = '0.0.4'
     desc = 'Abner Base'
     website = 'https://github.com/AbnerCai/Abner'
 }
