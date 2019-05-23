@@ -2,3 +2,5 @@ include ':app', ':abner', ':lib_webview'
 
 include ':lib_rx'
 include ':lib_zxing'
+
+include ':lib_ui'
