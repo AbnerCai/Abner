@@ -18,7 +18,7 @@ interface IBaseModelCallback<T> {
      * 失败回调.
      * @param failure
      */
-    fun onFailure(failure: String)
+    fun onFailure(code: Int, failure: String)
 
     /**
      * 错误回调.

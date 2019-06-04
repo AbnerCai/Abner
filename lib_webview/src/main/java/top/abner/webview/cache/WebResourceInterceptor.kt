@@ -33,20 +33,19 @@ class WebResourceInterceptor : ResourceInterceptor{
     }
 
     override fun urlIntercept(url: String?): WebResourceResponse? {
-        CLog.i(TAG, "url: " + url);
+        CLog.i(TAG, "url: " + url)
         var response: WebResourceResponse? = null
         // TODO： 判断后缀
         if (null == url || "".equals(url)) {
             return null
         }
         if (url.endsWith(".js")) {
-            Log.i(TAG, "js: " + url);
             response = getWebResourceResponse(url,"text/javascript", "UTF-8");
             if (null == response) {
-                Log.i(TAG, "下载缓存")
+                CLog.i(TAG, "js: 下载缓存: " + url)
                 CacheHelper.getInstance().setFileToDisk(url, object: CacheHelper.CacheCallback{
                     override fun onFinish(fileUrl: String?) {
-                        Log.i(TAG, "fileUrl: " + fileUrl)
+                        Log.i(TAG, "下载完成 fileUrl: " + fileUrl)
                     }
 
                     override fun onError(e: Exception?) {
@@ -54,7 +53,41 @@ class WebResourceInterceptor : ResourceInterceptor{
                     }
                 })
             } else {
-                Log.i(TAG, "使用缓存")
+                CLog.i(TAG, "js: 使用缓存: " + url)
+            }
+        }
+        if (url.endsWith(".css")) {
+            response = getWebResourceResponse(url,"text/css", "UTF-8");
+            if (null == response) {
+                CLog.i(TAG, "css: 下载缓存: " + url)
+                CacheHelper.getInstance().setFileToDisk(url, object: CacheHelper.CacheCallback{
+                    override fun onFinish(fileUrl: String?) {
+                        Log.i(TAG, "下载完成 fileUrl: " + fileUrl)
+                    }
+
+                    override fun onError(e: Exception?) {
+                        e?.printStackTrace()
+                    }
+                })
+            } else {
+                CLog.i(TAG, "css: 使用缓存: " + url)
+            }
+        }
+        if (url.endsWith(".png")) {
+            response = getWebResourceResponse(url,"image/png", "UTF-8");
+            if (null == response) {
+                CLog.i(TAG, "png: 下载缓存: " + url)
+                CacheHelper.getInstance().setFileToDisk(url, object: CacheHelper.CacheCallback{
+                    override fun onFinish(fileUrl: String?) {
+                        Log.i(TAG, "下载完成 fileUrl: " + fileUrl)
+                    }
+
+                    override fun onError(e: Exception?) {
+                        e?.printStackTrace()
+                    }
+                })
+            } else {
+                CLog.i(TAG, "png: 使用缓存: " + url)
             }
         }
         return response
@@ -64,7 +97,6 @@ class WebResourceInterceptor : ResourceInterceptor{
      * 获取资源文件
      * */
     private fun getWebResourceResponse(url: String, mime: String, style: String): WebResourceResponse? {
-        CLog.i(TAG, "getWebResourceResponse: " + url);
         var response: WebResourceResponse? = null
         var input: InputStream? = CacheHelper.getInstance().getInputStreamFromDisk(url)
         if (null == input) {

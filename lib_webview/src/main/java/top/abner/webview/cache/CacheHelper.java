@@ -40,10 +40,10 @@ public class CacheHelper {
 
     private ThreadPoolExecutor mExecutor = new ThreadPoolExecutor(
             5,
-            10,
+            20,
             200,
             TimeUnit.MILLISECONDS,
-            new ArrayBlockingQueue<Runnable>(5),
+            new ArrayBlockingQueue<Runnable>(50),
             new CacheThreadFactory(TAG));
 
     private CacheHelper(){

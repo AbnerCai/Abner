@@ -1,5 +1,6 @@
 package site.nebulas.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -8,13 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Switch;
-import android.widget.TextView;
-
+import android.widget.*;
 import androidx.annotation.Nullable;
 
 /**
@@ -22,7 +17,7 @@ import androidx.annotation.Nullable;
  * @version 1.0.0
  * @date 2018/8/9
  */
-public class MenuBar extends LinearLayout{
+public class MenuBar extends LinearLayout {
 
     private Context mContext;
 
@@ -32,14 +27,23 @@ public class MenuBar extends LinearLayout{
     Switch mRightSwitch;
 
     public MenuBar(Context context) {
-        super(context, null);
+        super(context);
+        this.mContext = context;
+        initView(context);
     }
 
     public MenuBar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
+        this.mContext = context;
         initView(context);
         init(context, attrs,0);
+    }
+
+    public MenuBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.mContext = context;
+        initView(context);
+        init(context, attrs,defStyleAttr);
     }
 
     private void initView(Context context) {
@@ -61,18 +65,21 @@ public class MenuBar extends LinearLayout{
     }
 
 
+    @SuppressLint("ResourceAsColor")
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
 
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.MenuBar);
         if (attributes != null) {
             // 处理MenuBar背景色
-            int menuBarBackGround = attributes.getResourceId(R.styleable.MenuBar_menu_bar_background_color, Color.GREEN);
-            setBackgroundResource(menuBarBackGround);
+            int menuBarBackGround = attributes.getResourceId(R.styleable.MenuBar_menu_bar_background_color, Color.WHITE);
+            if (menuBarBackGround != -1) {
+                setBackgroundColor(menuBarBackGround);
+            }
 
             // 处理左边图片,获取是否要显示左边图片
             boolean leftImageVisible = attributes.getBoolean(R.styleable.MenuBar_left_image_visible, false);
             if (!leftImageVisible) {
-                mLeftImg.setVisibility(View.GONE);
+                mLeftImg.setVisibility(View.INVISIBLE);
             } else {
                 mLeftImg.setVisibility(View.VISIBLE);
 
